@@ -1,0 +1,7 @@
+mc : False
+input_files : ["/data/shared/lit_run3/new_dataformat/AO2D_22m_merged.root", "/data/shared/lit_run3/new_dataformat/AO2D_22o_merged.root"]
+output_dir : '../lithium_results/'
+output_file : 'lit4_tree_data.root'
+selection : 'fHe3NSigmaTPC>-3 and fHe3NClsTPC>90'
+is_matter : 0
+correction_file: "utils/he3_pt_calibration.root"

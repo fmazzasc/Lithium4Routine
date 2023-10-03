@@ -1,0 +1,7 @@
+mc : True
+input_files : ["/data/shared/lit_run3/AO2D_MC.root"]
+output_dir : '../lithium_results/'
+output_file : 'lit4_tree_mc.root'
+selection : ''
+is_matter: -1
+correction_file: "utils/he3_pt_calibration.root"
