@@ -26,6 +26,7 @@ tree = uproot.open(path_dir + "/" + f"DauTreeMC.root")["DauTreeMC"].arrays(libra
 tree.query("itsTPCPt > 0 and genPt<2 and abs(pdg)==1000020030", inplace=True)
 tree["itsTPCPt"] *= 2
 tree["tpcPt"] *= 2
+tree["itsPt"] *= 2
 print(tree.columns)
 
-print(tree[["genPt", "itsTPCPt", "tpcPt","isITSTPCfake", "isITSfake", "isTPCfake"]])
+print(tree[["genPt", "itsTPCPt", "tpcPt", "itsPt","isITSTPCfake", "isITSfake", "isTPCfake"]])

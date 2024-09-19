@@ -1,0 +1,10 @@
+mc : False
+input_files : ["/data3/fmazzasc/lit_run3/EM/pp24/af/AO2D.root",
+              # "/data3/fmazzasc/lit_run3/EM/pp24/ag/AO2D.root",
+              # "/data3/fmazzasc/lit_run3/EM/pp24/aj/AO2D.root",
+              "/data3/fmazzasc/lit_run3/EM/pp24/al/AO2D.root",
+            ]
+output_dir : '../lithium_results/'
+output_file : 'lit4_pp_em.root'
+selection : 'fNSigmaTPCHe3>-2 and fNClsTPCHe3>90 and fChi2TPCHe3 > 0.5 and fAvgClusterSizeHe > 5 and fMass < 4 and fPt > 2'
+is_matter : 0

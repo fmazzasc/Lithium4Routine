@@ -79,7 +79,7 @@ struct GPart
 double calcRadius(std::vector<MCTrack> *MCTracks, const MCTrack &motherTrack, int dauPDG);
 
 void DauTreeBuilder(int dau0PDG = 2212, int dau1PDG = 1000020030, int mothPDG = 1000030040,
-                    bool debug = false, std::string path = "/data/fmazzasc/its_data/sim/lit_test_2/", std::string outsuffix = "")
+                    bool debug = false, std::string path = "/data3/fmazzasc/sim/lit_new/", std::string outsuffix = "")
 {
 
     if (outsuffix != "")

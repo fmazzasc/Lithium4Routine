@@ -1,7 +1,6 @@
 mc : True
-input_files : ["/data/shared/lit_run3/AO2D_MC.root"]
+input_files : ["/home/fmazzasc/O2WorkflowLaunchers/lith/AO2D_lit.root"]
 output_dir : '../lithium_results/'
-output_file : 'lit4_tree_mc.root'
-selection : ''
+output_file : 'AO2D_lit.root'
+selection : 'fHe3MassTOF<0'
 is_matter: -1
-correction_file: "utils/he3_pt_calibration.root"
