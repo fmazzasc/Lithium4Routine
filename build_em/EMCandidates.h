@@ -101,4 +101,21 @@ struct Li4Candidate
         fChi2TPCHad = had.fChi2TPCHad;
     }
 
+
+    float calcInvMass() {
+        float pxHe3 = fPtHe3 * TMath::Cos(fPhiHe3);
+        float pyHe3 = fPtHe3 * TMath::Sin(fPhiHe3);
+        float pzHe3 = fPtHe3 * TMath::SinH(fEtaHe3);
+        float pHe3 = TMath::Sqrt(pxHe3 * pxHe3 + pyHe3 * pyHe3 + pzHe3 * pzHe3);
+        float pxHad = fPtHad * TMath::Cos(fPhiHad);
+        float pyHad = fPtHad * TMath::Sin(fPhiHad);
+        float pzHad = fPtHad * TMath::SinH(fEtaHad);
+        float pHad = TMath::Sqrt(pxHad * pxHad + pyHad * pyHad + pzHad * pzHad);
+        float eHe3 = TMath::Sqrt(pHe3 * pHe3 + 2.80923 * 2.80923);
+        float eHad = TMath::Sqrt(pHad * pHad + 0.13957 * 0.13957);
+        float pTot = TMath::Sqrt((pxHe3 + pxHad) * (pxHe3 + pxHad) + (pyHe3 + pyHad) * (pyHe3 + pyHad) + (pzHe3 + pzHad) * (pzHe3 + pzHad));
+        float eTot = eHe3 + eHad;
+        return TMath::Sqrt(eTot * eTot - pTot * pTot);
+    }
+
 };

@@ -17,7 +17,7 @@ struct IndexTableUtils {
   int getZetaBin(float zeta);
   int getMultBin(float mult);
   int getBinIndex(float zeta, float mult);
-  int mZetaBins = 10, mMultBins = 10;
+  int mZetaBins = 10, mMultBins = 1;
   float minZeta = -10, maxZeta = 10;
   float minMult = 0., maxMult = 100;
 };

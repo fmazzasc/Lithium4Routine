@@ -42,10 +42,10 @@ void TreeMerging(const char *inputFileName, const char *treeName, TFile *outputF
     inputFile->Close();
 }
 
-void testEM(bool doMerge = true)
+void processEM(bool doMerge = false)
 {
     gRandom->SetSeed(1995);
-    int mEMDepth = 5;
+    int mEMDepth = 200;
 
     if (doMerge)
     {
@@ -62,8 +62,8 @@ void testEM(bool doMerge = true)
     TTree *inputCollsTree = (TTree *)inputCollsFile->Get("O2he3hadmult");
 
     IndexTableUtils mUtils;
-    std::vector<std::vector<int>> mHe3CollsIndices;
-    mHe3CollsIndices.resize(mUtils.mZetaBins * mUtils.mMultBins + 1);
+    std::vector<std::vector<int>> mHadIndices;
+    mHadIndices.resize(mUtils.mZetaBins * mUtils.mMultBins + 1);
 
     CollCandidate collCand;
     He3Candidate he3Cand;
@@ -85,15 +85,15 @@ void testEM(bool doMerge = true)
         he3Cand.fZHe3 = collCand.fZVertex;
         he3Cand.fMultHe3 = collCand.fCentralityFT0C;
         mHadCands.push_back(hadCand);
+        int iBin = mUtils.getBinIndex(hadCand.fZHad, hadCand.fMultHad);
+        mHadIndices[iBin].push_back(mHadCands.size() - 1);
 
+        // fillHe3 only once per zvtx
         if (abs(zvtxHe3 - he3Cand.fZHe3) < 1e-6)
-        { // fillHe3 only once per zvtx
+        {
             continue;
         }
-
-        int iBin = mUtils.getBinIndex(he3Cand.fZHe3, he3Cand.fMultHe3);
         mHe3Cands.push_back(he3Cand);
-        mHe3CollsIndices[iBin].push_back(mHe3Cands.size() - 1);
         zvtxHe3 = he3Cand.fZHe3;
     }
 
@@ -102,49 +102,45 @@ void testEM(bool doMerge = true)
     std::cout << "Size of He3 Candidates to be mixed: " << mHe3Cands.size() << std::endl;
     std::cout << "--------------------------------" << std::endl;
 
-    Li4Candidate li4CandME;
-    auto outputFile = TFile::Open("outputEM.root", "RECREATE");
-    auto outputTree = new TTree("outputTree", "outputTree");
-    // flash the Mixed event structure in the output tree
-    outputTree->Branch("MixedEvent", &li4CandME);
+    // Li4Candidate li4CandME;
+    // auto outputFile = TFile::Open("/data3/fmazzasc/lit_run3/EM/pbpb/outputEM.root", "RECREATE");
+    // auto outputTree = new TTree("DF", "DF");
+    // // flash the Mixed event structure in the output tree
+    // outputTree->Branch("O2he3hadtable", &li4CandME);
 
-    for (int iHad = 0; iHad < mHadCands.size(); iHad++)
-    {
+    // for (int iHe3 = 0; iHe3 < mHe3Cands.size(); iHe3++)
+    // {
 
-        // print 1% progress
-        if (iHad % (mHadCands.size() / 100) == 0)
-        {
-            std::cout << "Processing entry: " << iHad << " / " << mHadCands.size() << ", " << 100 * iHad / mHadCands.size() << "%" << std::endl;
-        }
+    //     // print 1% progress
+    //     if (iHe3 % (mHe3Cands.size() / 100) == 0)
+    //     {
+    //         std::cout << "Processing entry: " << iHe3 << " / " << mHe3Cands.size() << ", " << 100 * iHe3 / mHe3Cands.size() << "%" << std::endl;
+    //     }
 
-        auto &hadCand = mHadCands[iHad];
-        li4CandME.setHadron(hadCand);
-        int iBin = mUtils.getBinIndex(hadCand.fZHad, hadCand.fMultHad);
-        int iDepth = 0, iSameColl = 0;
+    //     auto &he3Cand = mHe3Cands[iHe3];
+    //     li4CandME.setHe3(he3Cand);
+    //     int iBin = mUtils.getBinIndex(he3Cand.fZHe3, he3Cand.fMultHe3);
+    //     int iDepth = 0;
 
-        while (iDepth < mEMDepth)
-        {
+    //     for (int iHad = 0; iHad < mHadIndices[iBin].size(); iHad++)
+    //     {
+    //         if (iDepth >= mEMDepth)
+    //         {
+    //             // std::cout << "Reached maximum depth of " << mEMDepth << " for this event" << std::endl;
+    //             break;
+    //         }
+    //         auto &hadCand = mHadCands[mHadIndices[iBin][iHad]];
+    //         li4CandME.setHadron(hadCand);
 
-            if (iSameColl > 10) // avoid hanging condition
-            {
-                break;
-            }
+    //         if ((abs(he3Cand.fZHe3 - hadCand.fZHad) < 1e-6 && abs(he3Cand.fMultHe3 - hadCand.fMultHad) < 1e-6) || li4CandME.calcInvMass() > 4.15314)
+    //         {
+    //             continue;
+    //         }
 
-            auto &collIndices = mHe3CollsIndices[iBin];
-            int iCand = gRandom->Integer(collIndices.size());
-            auto &he3Cand = mHe3Cands[collIndices[iCand]];
-
-            if (abs(he3Cand.fZHe3 - hadCand.fZHad) < 1e-6 && abs(he3Cand.fMultHe3 - hadCand.fMultHad) < 1e-6)
-            {
-                iSameColl++;
-                continue;
-            }
-
-            li4CandME.setHe3(mHe3Cands[iCand]);
-            li4CandME.fZVertex = (he3Cand.fZHe3 + hadCand.fZHad) / 2;
-            li4CandME.fCentralityFT0C = (he3Cand.fMultHe3 + hadCand.fMultHad) / 2;
-            outputTree->Fill();
-            iDepth++;
-        }
-    }
+    //         li4CandME.fZVertex = (he3Cand.fZHe3 + hadCand.fZHad) / 2;
+    //         li4CandME.fCentralityFT0C = (he3Cand.fMultHe3 + hadCand.fMultHad) / 2;
+    //         outputTree->Fill();
+    //         iDepth++;
+    //     }
+    // }
 }

@@ -38,7 +38,7 @@ def correct_and_convert_df(df, calibrate_he3_pt=False):
 
     if 'fFlags' in df.columns:
         df['fHePIDHypo'] = np.right_shift(df['fFlags'], 4)
-        df['fPiPIDHypo'] = np.bitwise_and(df['fFlags'], 0b1111)
+        df['fHadPIDHypo'] = np.bitwise_and(df['fFlags'], 0b1111)
     
     if not 'fTPCChi2He' in df.columns:
         ## set dummy column to one
@@ -67,8 +67,8 @@ def correct_and_convert_df(df, calibrate_he3_pt=False):
     # 3He momentum
     df['fSignedPtHe3'] = df['fPtHe3']
     df['fPtHe3'] = abs(df['fPtHe3'])
-    df['fSignedPtPr'] = df['fPtPr']
-    df['fPtPr'] = abs(df['fPtPr'])
+    df['fSignedPtHad'] = df['fPtHad']
+    df['fPtHad'] = abs(df['fPtHad'])
     df.eval('fPxHe3 = fPtHe3 * cos(fPhiHe3)', inplace=True)
     df.eval('fPyHe3 = fPtHe3 * sin(fPhiHe3)', inplace=True)
     df.eval('fPzHe3 = fPtHe3 * sinh(fEtaHe3)', inplace=True)
@@ -76,10 +76,10 @@ def correct_and_convert_df(df, calibrate_he3_pt=False):
     df.eval('fEnHe3 = sqrt(fPHe3**2 + 2.8083916**2)', inplace=True)
 
     # pi momentum
-    df.eval('fPxPr = fPtPr * cos(fPhiPr)', inplace=True)
-    df.eval('fPyPr = fPtPr * sin(fPhiPr)', inplace=True)
-    df.eval('fPzPr = fPtPr * sinh(fEtaPr)', inplace=True)
-    df.eval('fPPr = fPtPr * cosh(fEtaPr)', inplace=True)
+    df.eval('fPxPr = fPtHad * cos(fPhiHad)', inplace=True)
+    df.eval('fPyPr = fPtHad * sin(fPhiHad)', inplace=True)
+    df.eval('fPzPr = fPtHad * sinh(fEtaHad)', inplace=True)
+    df.eval('fPPr = fPtHad * cosh(fEtaHad)', inplace=True)
     df.eval('fEnPr = sqrt(fPPr**2 + 0.93827**2)', inplace=True)
     # hypertriton momentum
     df.eval('fPx = fPxHe3 + fPxPr', inplace=True)
@@ -99,7 +99,7 @@ def correct_and_convert_df(df, calibrate_he3_pt=False):
     if "fItsClusterSizeHe3" in df.columns:
     ## loop over the candidates and compute the average cluster size
         clSizesHe = df['fItsClusterSizeHe3'].to_numpy()
-        clSizesPr = df['fItsClusterSizePr'].to_numpy()
+        clSizesPr = df['fItsClusterSizeHad'].to_numpy()
         clSizeHeAvg = np.zeros(len(clSizesHe))
         clSizePiAvg = np.zeros(len(clSizesPr))
         nHitsHe = np.zeros(len(clSizesHe))
@@ -113,9 +113,9 @@ def correct_and_convert_df(df, calibrate_he3_pt=False):
         clSizeHeAvg /= nHitsHe
         clSizePiAvg /= nHitsPi
         df['fAvgClusterSizeHe'] = clSizeHeAvg
-        df['fAvgClusterSizePi'] = clSizePiAvg
+        df['fAvgClusterSizeHad'] = clSizePiAvg
         df['nITSHitsHe'] = nHitsHe
-        df['nITSHitsPi'] = nHitsPi
+        df['nITSHitsHad'] = nHitsPi
 
 
     # remove useless columns

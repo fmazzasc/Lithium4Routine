@@ -33,14 +33,17 @@ selections = config['selection']
 is_matter = config['is_matter']
 
 # creating the dataframe
-tree_name = 'O2lithium4table' if not mc else 'O2lithium4tablemc'
+tree_name = 'O2he3hadtable' if not mc else 'O2he3hadtablemc'
 tree_hdl = TreeHandler(input_files_name, tree_name, folder_name='DF*')
+if (len(tree_hdl)== 0):
+    print("No trees found in the file, trying with EM based tree")
+    tree_name = 'DF/O2he3hadtable'
+    tree_hdl = TreeHandler(input_files_name, tree_name)
+    if (len(tree_hdl)== 0):
+        print("No trees found in the file, exiting...")
+        exit(1)
+
 df = tree_hdl.get_data_frame()
-print(df)
-
-
-# exit(1)
-
 # try to convert
 utils.correct_and_convert_df(df, False)
 print('df head: ', df.head())
@@ -79,14 +82,14 @@ hResolutionPtvsNTPCClus = ROOT.TH2F("hResolutionPtvsNTPCClus", ";N_{clus}^{TPC};
 #-----------------------------------------------------------------------------   
 if selections == '':
     if is_matter == 1:
-        selections = 'fSignedPtHe3 > 0 and fSignedPtPr > 0'
+        selections = 'fSignedPtHe3 > 0 and fSignedPtHad > 0'
     elif is_matter == 0:
-        selections = 'fSignedPtHe3 < 0 and fSignedPtPr < 0'
+        selections = 'fSignedPtHe3 < 0 and fSignedPtHad < 0'
 else:
     if is_matter == 1:
-        selections = selections + ' and fSignedPtHe3 > 0 and fSignedPtPr > 0'
+        selections = selections + ' and fSignedPtHe3 > 0 and fSignedPtHad > 0'
     elif is_matter == 0:
-        selections = selections + ' and fSignedPtHe3 < 0 and fSignedPtPr < 0'
+        selections = selections + ' and fSignedPtHe3 < 0 and fSignedPtHad < 0'
 
 print("selections: ", selections)
 # apply selections
@@ -115,23 +118,23 @@ print('df columns: ', df.columns)
 
 utils.fill_th1_hist(hPtRec, df, "fPt")
 utils.fill_th1_hist(hPtHe3, df, "fPtHe3")
-utils.fill_th1_hist(hPtPr, df, "fPtPr")
+utils.fill_th1_hist(hPtPr, df, "fPtHad")
 utils.fill_th1_hist(hRecInvMass, df, "fMass")
 utils.fill_th1_hist(hNSigmaHe3, df, "fNSigmaTPCHe3")
 utils.fill_th2_hist(h2MassNsigmaHe3, df, "fMass", "fNSigmaTPCHe3")
 utils.fill_th2_hist(h2MassNClusTPCHe3, df, "fMass", "fNClsTPCHe3")
 utils.fill_th2_hist(h2He3PtNClusTPCHe3, df, "fPtHe3", "fNClsTPCHe3")
-utils.fill_th2_hist(h2NSigmaProtonPt, df, "fPtPr", "fNSigmaTPCPr")
+utils.fill_th2_hist(h2NSigmaProtonPt, df, "fPtHad", "fNSigmaTPCHad")
 utils.fill_th2_hist(h2MassPtHe3, df, "fPtHe3", "fMass")
 utils.fill_th2_hist(h2MassPtReco, df, "fPt", "fMass")
-utils.fill_th2_hist(h2MassPtProton, df, "fMass", "fPtPr")
+utils.fill_th2_hist(h2MassPtProton, df, "fMass", "fPtHad")
 utils.fill_th2_hist(h2PtRecoNsigmaHe3, df, "fPt", "fNSigmaTPCHe3")
 utils.fill_th2_hist(h2MassDCAxyHe3, df, "fMass", "fDCAxyHe3")
 utils.fill_th2_hist(h2MassDCAzHe3, df, "fMass", "fDCAzHe3")
-utils.fill_th2_hist(h2PtHe3PtPr, df, "fPtHe3", "fPtPr")
+utils.fill_th2_hist(h2PtHe3PtPr, df, "fPtHe3", "fPtHad")
 utils.fill_th2_hist(h2TPCSignalHe3, df, "fInnerParamTPCHe3", "fSignalTPCHe3")
 utils.fill_th2_hist(h2TOFMassHe3, df, "fMass", "fMassTOFHe3")
-utils.fill_th2_hist(h2TOFMassPr, df, "fPtPr", "fMassTOFPr")
+utils.fill_th2_hist(h2TOFMassPr, df, "fPtHad", "fMassTOFHad")
 
 
 ###compute eff vs pT
