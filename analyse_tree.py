@@ -36,36 +36,38 @@ is_matter = config['is_matter']
 tree_name = 'O2lithium4table' if not mc else 'O2lithium4tablemc'
 tree_hdl = TreeHandler(input_files_name, tree_name, folder_name='DF*')
 df = tree_hdl.get_data_frame()
+print(df)
 
 
 # exit(1)
 
 # try to convert
 utils.correct_and_convert_df(df, False)
+print('df head: ', df.head())
 
 
 
 ### output histograms----------------------------------------------------------
 
-hRecInvMass = ROOT.TH1F("hRecInvMass", ";m_{^{3}He + p} [GeV]; Counts ",  100, 3.743, 4)
-hPtRec = ROOT.TH1F("hPtRec", "; #it{p}_{T}; Counts", 50, 1, 10)
-hPtHe3 = ROOT.TH1F("hPtHe3", "; #it{p}_{T}; Counts", 50, 1, 10)
-hPtPr = ROOT.TH1F("hPtPr", "; #it{p}_{T}; Counts", 50, 1, 10)
+hRecInvMass = ROOT.TH1F("hRecInvMass", ";m_{^{3}He + p} [GeV]; Counts ",  80, 3.743, 3.85)
+hPtRec = ROOT.TH1F("hPtRec", "; #it{p}_{T}; Counts", 50, 0, 10)
+hPtHe3 = ROOT.TH1F("hPtHe3", "; #it{p}_{T}; Counts", 50, 0, 10)
+hPtPr = ROOT.TH1F("hPtPr", "; #it{p}_{T}; Counts", 50, 0, 10)
 hNSigmaHe3 = ROOT.TH1F("hNSigmaHe3", "hNSigmaHe3", 100, -4, 4)
 h2NSigmaProtonPt = ROOT.TH2F("h2NSigmaProtonPt", ";p_{T}^{p};n#sigma_{p}", 100, 0, 2, 100, -4, 4)
-h2MassNsigmaHe3 = ROOT.TH2F("h2MassNsigmaHe3", ";m_{^{3}He + p} [GeV];n#sigma_{^{3}He}", 100, 3.743, 4., 100, -4, 4)
-h2MassNClusTPCHe3 = ROOT.TH2F("h2MassNClusTPCHe3", ";m_{^{3}He + p} [GeV];N_{clus}^{TPC}", 100, 3.743, 4., 130, 30.5, 160.5)
+h2MassNsigmaHe3 = ROOT.TH2F("h2MassNsigmaHe3", ";m_{^{3}He + p} [GeV];n#sigma_{^{3}He}", 100, 3.743, 3.85, 100, -4, 4)
+h2MassNClusTPCHe3 = ROOT.TH2F("h2MassNClusTPCHe3", ";m_{^{3}He + p} [GeV];N_{clus}^{TPC}", 100, 3.743, 3.85, 130, 30.5, 160.5)
 h2He3PtNClusTPCHe3 = ROOT.TH2F("h2He3PtNClusTPCHe3", ";p_{T}^{^{3}He};N_{clus}^{TPC}", 100, 0, 6, 130, 30.5, 160.5)
-h2MassPtHe3 = ROOT.TH2F("h2MassPtHe3", ";;p_{T}^{^{3}He}; m_{^{3}He + p} [GeV]", 100, 0, 6, 100, 3.743, 4.)
-h2MassPtReco = ROOT.TH2F("h2MassPtReco", ";;p_{T}^{rec}; m_{^{3}He + p} [GeV]", 100, 0, 6, 100, 3.743, 4.)
+h2MassPtHe3 = ROOT.TH2F("h2MassPtHe3", ";;p_{T}^{^{3}He}; m_{^{3}He + p} [GeV]", 100, 0, 6, 100, 3.743, 3.85)
+h2MassPtReco = ROOT.TH2F("h2MassPtReco", ";;p_{T}^{rec}; m_{^{3}He + p} [GeV]", 100, 0, 6, 100, 3.743, 3.85)
 h2PtRecoNsigmaHe3 = ROOT.TH2F("h2PtRecoNsigmaHe3", ";p_{T}^{rec};n#sigma_{^{3}He}", 100, 0, 6, 100, -4, 4)
 
-h2MassPtProton = ROOT.TH2F("h2MassPtProton", ";m_{^{3}He + p} [GeV];p_{T}^{p}", 100, 3.743, 4., 100, 0, 2)
-h2MassDCAxyHe3 = ROOT.TH2F("h2MassDCAxyHe3", ";m_{^{3}He + p} [GeV];DCA_{xy}^{^{3}He}", 100, 3.743, 4., 100, -0.03, 0.03)
-h2MassDCAzHe3 = ROOT.TH2F("h2MassDCAzHe3", ";m_{^{3}He + p} [GeV];DCA_{z}^{^{3}He}", 100, 3.743, 4., 100, -0.01, 0.01)
+h2MassPtProton = ROOT.TH2F("h2MassPtProton", ";m_{^{3}He + p} [GeV];p_{T}^{p}", 100, 3.743, 3.85, 100, 0, 2)
+h2MassDCAxyHe3 = ROOT.TH2F("h2MassDCAxyHe3", ";m_{^{3}He + p} [GeV];DCA_{xy}^{^{3}He}", 100, 3.743, 3.85, 100, -0.03, 0.03)
+h2MassDCAzHe3 = ROOT.TH2F("h2MassDCAzHe3", ";m_{^{3}He + p} [GeV];DCA_{z}^{^{3}He}", 100, 3.743, 3.85, 100, -0.01, 0.01)
 h2PtHe3PtPr = ROOT.TH2F("h2PtHe3PtPr", ";p_{T}^{^{3}He};p_{T}^{p}", 100, 0, 6, 100, 0, 3)
 h2TPCSignalHe3 = ROOT.TH2F("h2TPCSignalHe3", ";p^{TPC}{^{3}He}/z;TPC signal", 100, 0, 6, 100, 0, 2000)
-h2TOFMassHe3 = ROOT.TH2F("h2TOFMassHe3", ";m_{^{3}He + p} [GeV];TOF mass", 100, 3.743, 4., 100, 1, 5)
+h2TOFMassHe3 = ROOT.TH2F("h2TOFMassHe3", ";m_{^{3}He + p} [GeV];TOF mass", 100, 3.743, 3.85, 100, 1, 5)
 h2TOFMassPr = ROOT.TH2F("h2TOFMassPr", ";p_{T}^{p};TOF mass", 100, 0, 3, 100, 0.7, 1.4)
 
 
@@ -77,21 +79,20 @@ hResolutionPtvsNTPCClus = ROOT.TH2F("hResolutionPtvsNTPCClus", ";N_{clus}^{TPC};
 #-----------------------------------------------------------------------------   
 if selections == '':
     if is_matter == 1:
-        selections = 'fSignedPtHe3 > 0'
+        selections = 'fSignedPtHe3 > 0 and fSignedPtPr > 0'
     elif is_matter == 0:
-        selections = 'fSignedPtHe3 < 0'
+        selections = 'fSignedPtHe3 < 0 and fSignedPtPr < 0'
 else:
     if is_matter == 1:
-        selections = selections + ' and fSignedPtHe3 > 0'
+        selections = selections + ' and fSignedPtHe3 > 0 and fSignedPtPr > 0'
     elif is_matter == 0:
-        selections = selections + ' and fSignedPtHe3 < 0'
+        selections = selections + ' and fSignedPtHe3 < 0 and fSignedPtPr < 0'
 
 print("selections: ", selections)
 # apply selections
 if selections != '':
     df.query(selections, inplace=True)
     df.reset_index(drop=True, inplace=True)
-
 if mc:
     if is_matter == 1: ## matter
         utils.fill_th1_hist_abs(hPtGen, df.query('fSignedPtMC>0', inplace=False), 'fSignedPtMC')

@@ -1,6 +1,6 @@
 mc : True
-input_files : ["/home/fmazzasc/O2WorkflowLaunchers/lith/AO2D_lit.root"]
+input_files : ["/home/fmazzasc/lit/AO2D.root"]
 output_dir : '../lithium_results/'
 output_file : 'AO2D_lit.root'
-selection : 'fHe3MassTOF<0'
+selection : ''
 is_matter: -1

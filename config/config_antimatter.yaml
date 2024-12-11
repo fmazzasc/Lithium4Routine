@@ -1,10 +1,8 @@
 mc : False
-input_files : ["/data3/fmazzasc/lit_run3/DATA/pp24/af/AO2D.root",
-              "/data3/fmazzasc/lit_run3/DATA/pp24/ag/AO2D.root",
-              "/data3/fmazzasc/lit_run3/DATA/pp24/aj/AO2D.root",
-              "/data3/fmazzasc/lit_run3/DATA/pp24/al/AO2D.root",
+input_files : [
+              "/data3/fmazzasc/lit_run3/DATA/pbpb/AO2D.root",
             ]
-output_dir : '../lithium_results/'
-output_file : 'lit4_pp.root'
-selection : 'fNSigmaTPCHe3>-2 and fNClsTPCHe3>90 and fChi2TPCHe3 > 0.5 and fAvgClusterSizeHe > 5 and fMass < 4 and fPt > 2'
-is_matter : 0
+output_dir : '../lithium_results/matter/'
+output_file : 'lit4_pbpb.root'
+selection : 'fNSigmaTPCHe3>-2 and fNClsTPCHe3>110 and fChi2TPCHe3 > 0.5 and fAvgClusterSizeHe > 6 and fPt > 2'
+is_matter : 1
