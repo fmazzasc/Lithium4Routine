@@ -48,6 +48,11 @@ df = tree_hdl.get_data_frame()
 utils.correct_and_convert_df(df, False)
 print('df head: ', df.head())
 
+print('min df ', df.min())
+print('max df ', df.max())
+
+exit(1)
+
 
 
 ### output histograms----------------------------------------------------------

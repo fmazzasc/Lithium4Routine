@@ -5,9 +5,28 @@
 struct CollCandidate
 {
     float fZVertex, fCentralityFT0C;
+    int CollID = -1;
     void setCollBranchAddress(TTree * tree) {
         tree->SetBranchAddress("fZVertex", &fZVertex);
         tree->SetBranchAddress("fCentralityFT0C", &fCentralityFT0C);
+    }
+};
+
+
+struct CollHadBracket
+{
+    int CollID, fHadStartIndex, fHadEndIndex;
+    void SetMin(int min) {
+        fHadStartIndex = min;
+    }
+    void SetMax(int max) {
+        fHadEndIndex = max;
+    }
+    int GetMin() {
+        return fHadStartIndex;
+    }
+    int GetMax() {
+        return fHadEndIndex;
     }
 };
 
@@ -18,7 +37,8 @@ struct He3Candidate
     unsigned int fItsClusterSizeHe3;
     unsigned char fNClsTPCHe3, fSharedClustersHe3;
     float fNSigmaTPCHe3, fChi2TPCHe3;
-    float fZHe3, fMultHe3;
+    float fZVertex, fCentralityFT0C;
+    int CollID = -1;
     
     void setHe3BranchAddress(TTree * tree) {
         tree->SetBranchAddress("fPtHe3", &fPtHe3);
@@ -44,7 +64,8 @@ struct HadronCandidate
     unsigned int fItsClusterSizeHad;
     unsigned char fSharedClustersHad;
     float fNSigmaTPCHad, fChi2TPCHad;
-    float fZHad, fMultHad;
+    int collIndex = -1;
+    float fZVertex, fCentralityFT0C;
 
     void setHadronBranchAddress(TTree * tree) {
         tree->SetBranchAddress("fPtHad", &fPtHad);
@@ -103,19 +124,25 @@ struct Li4Candidate
 
 
     float calcInvMass() {
-        float pxHe3 = fPtHe3 * TMath::Cos(fPhiHe3);
-        float pyHe3 = fPtHe3 * TMath::Sin(fPhiHe3);
-        float pzHe3 = fPtHe3 * TMath::SinH(fEtaHe3);
+        float pxHe3 = std::abs(fPtHe3) * TMath::Cos(fPhiHe3);
+        float pyHe3 = std::abs(fPtHe3) * TMath::Sin(fPhiHe3);
+        float pzHe3 = std::abs(fPtHe3) * TMath::SinH(fEtaHe3);
         float pHe3 = TMath::Sqrt(pxHe3 * pxHe3 + pyHe3 * pyHe3 + pzHe3 * pzHe3);
-        float pxHad = fPtHad * TMath::Cos(fPhiHad);
-        float pyHad = fPtHad * TMath::Sin(fPhiHad);
-        float pzHad = fPtHad * TMath::SinH(fEtaHad);
+        float pxHad = std::abs(fPtHad) * TMath::Cos(fPhiHad);
+        float pyHad = std::abs(fPtHad) * TMath::Sin(fPhiHad);
+        float pzHad = std::abs(fPtHad) * TMath::SinH(fEtaHad);
         float pHad = TMath::Sqrt(pxHad * pxHad + pyHad * pyHad + pzHad * pzHad);
-        float eHe3 = TMath::Sqrt(pHe3 * pHe3 + 2.80923 * 2.80923);
-        float eHad = TMath::Sqrt(pHad * pHad + 0.13957 * 0.13957);
+        float eHe3 = TMath::Sqrt(pHe3 * pHe3 + 2.8083916 * 2.8083916);
+        float eHad = TMath::Sqrt(pHad * pHad + 0.938272 * 0.938272);
         float pTot = TMath::Sqrt((pxHe3 + pxHad) * (pxHe3 + pxHad) + (pyHe3 + pyHad) * (pyHe3 + pyHad) + (pzHe3 + pzHad) * (pzHe3 + pzHad));
         float eTot = eHe3 + eHad;
         return TMath::Sqrt(eTot * eTot - pTot * pTot);
+    }
+
+    float calcPt() {
+        float pxTot = std::abs(fPtHe3) * TMath::Cos(fPhiHe3) + std::abs(fPtHad) * TMath::Cos(fPhiHad);
+        float pyTot = std::abs(fPtHe3) * TMath::Sin(fPhiHe3) + std::abs(fPtHad) * TMath::Sin(fPhiHad);
+        return TMath::Sqrt(pxTot * pxTot + pyTot * pyTot);
     }
 
 };
