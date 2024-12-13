@@ -48,12 +48,11 @@ void processEM(bool doMerge = false)
     TH1D* hHe3BeforeEMAll = new TH1D("hHe3BeforeEMAll", "; p_{T} (GeV/c); Entries", 200, -10, 0);
     TH1D* hHe3BeforeEM = new TH1D("hHe3BeforeEM", "; p_{T} (GeV/c); Entries", 200, -10, 0);
     TH1D* hHe3AfterEM = new TH1D("hHe3AfterEM", "; p_{T} (GeV/c); Entries", 200, -10, 0);
-
-    TH1D* hInvMassBeforeEM = new TH1D("hInvMassBeforeEM", "; Inv Mass (GeV/c^{2}); Entries", 200, 3.743, 4.153);
-    TH1D* hInvMassAfterEM = new TH1D("hInvMassAfterEM", "; Inv Mass (GeV/c^{2}); Entries", 200, 3.743, 4.153);
+    TH1D* hInvMassBeforeEM = new TH1D("hInvMassBeforeEM", "; Inv Mass (GeV/c^{2}); Entries", 200, 3.743, 4);
+    TH1D* hInvMassAfterEM = new TH1D("hInvMassAfterEM", "; Inv Mass (GeV/c^{2}); Entries", 200, 3.743, 4);
 
     gRandom->SetSeed(1995);
-    int mEMDepth = 50;
+    int mEMDepth = 100;
 
     if (doMerge)
     {
@@ -103,7 +102,8 @@ void processEM(bool doMerge = false)
 
         li4Cand.setHadron(hadCand);
         li4Cand.setHe3(he3Cand);
-        hInvMassBeforeEM->Fill(li4Cand.calcInvMass());
+        if (he3Cand.fPtHe3 < 0)
+            hInvMassBeforeEM->Fill(li4Cand.calcInvMass());
         hHe3BeforeEMAll->Fill(he3Cand.fPtHe3);
 
         if (abs(oldCollCand.fZVertex - collCand.fZVertex) < 1e-5)
@@ -179,6 +179,7 @@ void processEM(bool doMerge = false)
                 li4CandME.fCentralityFT0C = collCand.fCentralityFT0C;
                 // std::cout << "inv mass: " << li4CandME.calcInvMass() << std::endl;
                 if (li4CandME.calcInvMass() < 4.15314 && li4CandME.fPtHe3 * li4CandME.fPtHad > 0 && li4CandME.calcPt() > 2){
+                    if (li4CandME.fPtHe3 < 0)
                     hInvMassAfterEM->Fill(li4CandME.calcInvMass());
                     hHe3AfterEM->Fill(he3Cand.fPtHe3);
                     outputTree->Fill();

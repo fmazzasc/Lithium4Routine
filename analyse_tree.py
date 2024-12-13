@@ -48,13 +48,6 @@ df = tree_hdl.get_data_frame()
 utils.correct_and_convert_df(df, False)
 print('df head: ', df.head())
 
-print('min df ', df.min())
-print('max df ', df.max())
-
-exit(1)
-
-
-
 ### output histograms----------------------------------------------------------
 
 hRecInvMass = ROOT.TH1F("hRecInvMass", ";m_{^{3}He + p} [GeV]; Counts ",  80, 3.743, 3.85)
